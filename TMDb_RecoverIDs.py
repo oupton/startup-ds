@@ -6,18 +6,19 @@ import os
 import threading
 import time
 
-i = 0
 lock = threading.Lock()
+count = 0
 url = 'https://api.themoviedb.org/3/movie/{}?api_key=4cb0c9b9398836f9fad813287e3cbfba'
 
 df = pd.read_csv(os.path.join('data', 'missing_financial_data.csv'))
 
 def get_IMDb_Id(tmdb_id):
-    with lock:
-        global i
-        i += 1
-        if i % 40 == 0:
-            time.sleep(10)
+    global count
+    lock.acquire()
+    count += 1
+    if count % 8 == 0:
+        time.sleep(10)
+    lock.release()
     tmdb_resp = requests.get(url.format(tmdb_id))
     if tmdb_resp.status_code != 200:
         print('Couldn\'t retrieve TMDb ID: {}'.format(tmdb_id))
