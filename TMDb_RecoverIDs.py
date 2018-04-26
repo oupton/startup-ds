@@ -14,11 +14,11 @@ df = pd.read_csv(os.path.join('data', 'missing_financial_data.csv'))
 
 def get_IMDb_Id(tmdb_id):
     global count
-    lock.acquire()
+    # lock.acquire()
     count += 1
     if count % 8 == 0:
         time.sleep(10)
-    lock.release()
+    # lock.release()
     tmdb_resp = requests.get(url.format(tmdb_id))
     if tmdb_resp.status_code != 200:
         print('Couldn\'t retrieve TMDb ID: {}'.format(tmdb_id))
@@ -26,7 +26,10 @@ def get_IMDb_Id(tmdb_id):
     try:
         id = tmdb_resp.json()['imdb_id']
         print('Recovered id IMDb ID: {} for TMDb ID: {}'.format(id, tmdb_id))
+        return id
     except:
         return '-1'
 
 df['recovered_ids'] = Parallel(n_jobs=4)(delayed(get_IMDb_Id)(tmdb_id) for tmdb_id in df['id'].astype('int').astype('str'))
+df.to_csv(os.path.join('data', 'missing_financial_data.csv'))
+
