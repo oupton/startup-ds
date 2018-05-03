@@ -6,7 +6,7 @@ After much brainstorming and soul-searching, we encountered [The Movies Dataset]
 The seed of our idea came from the question of how indicative movie trailer YouTube metrics (views, likes, dislikes) would be on movie revenue. We decided to expand that to building a general **movie revenue predictor**, based on various data that would be available before the release of the movie. We had to eventually modify this idea slighty - we will soon explain why.
 
 ## Data Curation
-The label we were looking at was A huge amount of the efforts in our project went into curating and cleaning up the dataset. Initially, only 5381 movies out of the 45,000 had the financial data (budget and revenue) we thought would be important. We were also missing certain features we wanted to investigate, like movie trailer metadata from Youtube. We had to find ways to fill in the missing data.
+A huge amount of the efforts in our project went into curating and cleaning up the dataset. Initially, only 5381 movies out of the 45,000 had the financial data (budget and revenue) we thought would be important. We were also missing certain features we wanted to investigate, like movie trailer metadata from Youtube. We had to find ways to fill in the missing data.
 
 ### Filling in movie trailer metadata
 Fortunately, the original dataset did provide the TMDb IDs of each of the movies. [The Movie Database](https://www.themoviedb.org/?language=en) (TMDb) is a community-built movie and TV database. Using the TMDb IDs, we could pull the YouTube trailer IDs of the movies using the [TMDb API](https://www.themoviedb.org/documentation/api?language=en). We then used the [YouTube Data API](https://developers.google.com/youtube/v3/getting-started) to pull the trailer views, likes and dislikes for these trailers. 
@@ -22,7 +22,32 @@ There was still plenty of work to be done. A lot of the features available to us
 #### One-hot coding of languages, genres
 The languages spoken in a movie and the genres which the movie occupied (as determined by the Full MovieLens Dataset) were both available to us as features; however, they were initially available as string representations of Python dictionaries, which made them hard to work with.
 
+![Genres](https://github.com/oupton/startup-ds/blob/master/images/genres.png?raw=true "Genres")
 
+![Languages](https://github.com/oupton/startup-ds/blob/master/images/languages.png?raw=true "Languages")
+
+We decided to extract the data, keep the most frequently seen categories for each, and did a one-hot coding of them so that we could fit a model on them.
+
+#### Date features
+We also suspected that the date of release would be important; however, just the raw date would be difficult to work with. We thus decided to introduce two features, after some simple parsing: the number of days since the very first movie release date in our dataset (which was February 8, 1915!), and the number of days since the start of the year in which the movie was released.
+
+### Final dataset
+After much work, the features we ended up working with were:
+- Budget
+- Runtime
+- YouTube trailer views
+- YouTube trailer likes
+- YouTube trailer dislikes
+- Number of YouTube trailers
+- Number of days since first release date
+- Number of days since start of that year
+- Genres (one-hot coding)
+- Number of languages spoken 
+- Languages (one-hot coding)
+
+The label we were trying to predict was the **revenue** of each movie.
+
+Now that our dataset was curated, we could get to work building our model.
 
 ## Credits
 - Oliver Upton: [@oupton](https://github.com/oupton)
