@@ -3,8 +3,10 @@ After much brainstorming and soul-searching, we encountered [The Movies Dataset]
 
 The seed of our idea came from the question of how indicative movie trailer YouTube metrics (views, likes, dislikes) would be on movie revenue. We decided to expand that to building a general **movie revenue predictor**, based on various data that would be available before the release of the movie. We had to eventually modify this idea slighty - we will soon explain why.
 
-#Impact
-Being able to accurately predict the profitability of a movie could have a massive real world impact. Over the past 5 years, the film industry has generated an average of $10.8 billion of revenue in ticket sales at the box office, and that number gets larger every year. If we count later mechandising and home video sales, that number jumps to 19 billion. As of 2016, the film industry supported 1.9 million U.S. jobs and $121 billion in wages. It is fair to say that it is a significant part of our economy, and predicting the profitability of films is not trivial.
+# Impact
+Being able to accurately predict the profitability of a movie could have a massive real world impact. Over the past 5 years, the film industry has generated an average of $10.8 billion in revenue in ticket sales at the box office, and that number gets larger every year. If we count later mechandising and home video sales, that number jumps to $19 billion. As of 2016, the film industry supported 1.9 million U.S. jobs and $121 billion in wages. It is fair to say that it is a significant part of our economy, and predicting the profitability of films is not trivial.
+
+![Hollywood](https://images.pexels.com/photos/164183/pexels-photo-164183.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940 "Hollywood")
 
 # Data curation
 A huge amount of the efforts in our project went into curating and cleaning up the dataset. Initially, only 5381 movies out of the 45,000 had the financial data (budget and revenue) we thought would be important. We were also missing certain features we wanted to investigate, like movie trailer metadata from Youtube. We had to find ways to fill in the missing data.
@@ -83,7 +85,15 @@ We attempted XGBoost again. Our initial run saw some success, with an AUC score 
 
 # Understanding our model
 
+XGBoost nicely gives us a "Feature Importance" graph of the features used in the model. While the numbers do not directly represent linear coefficients of the features (you can learn about the feature importance function in more detail [here](https://machinelearningmastery.com/feature-importance-and-feature-selection-with-xgboost-in-python/)), they nevertheless give us some insight into which features play a crucial role in determining whether a movie will be profitable or not.
 
+![XGB feature importance](https://github.com/oupton/startup-ds/blob/master/images/xgb_features.png?raw=true "XGB feature importance")
+
+The most important feature was how recently the movie was released, relative to the earliest release date in our data. This makes sense: With technological progress, movie budgets have gone up and filmmakers can depict certain scenes more graphically and realistically. People globally also have more purchasing power, allowing them to spend more on watching movies.
+
+However, it was really interesting that the second-most important feature was which day in the year a movie was released - more so than other factors, including movie budget and genre!
+
+Also, the 3 features we extracted from YouTube data are among the top 7 most important features, which validates our hypothesis that trailer metadata could be predictive of movie profitability.
 
 # Credits
 - Oliver Upton: [@oupton](https://github.com/oupton)
