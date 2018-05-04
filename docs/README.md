@@ -1,5 +1,3 @@
-title: Predicting movie profitability with a data-driven approach
-
 # Motivation
 After much brainstorming and soul-searching, we encountered [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) by [Rounak Banik](https://www.kaggle.com/rounakbanik) on Kaggle, which contained metadata for 45,000 movies listed in the [Full MovieLens Dataset](https://grouplens.org/datasets/movielens/) as well as ratings from 270,000 users for those movies.
 
