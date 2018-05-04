@@ -95,6 +95,31 @@ However, it was really interesting that the second-most important feature was wh
 
 Also, the 3 features we extracted from YouTube data are among the top 7 most important features, which validates our hypothesis that trailer metadata could be predictive of movie profitability.
 
+# Next Steps
+## Addressing Potential Problems
+
+One potential problem with our data is that some of the YouTube trailer views and likes may have happened after the movie was released.  If trailers get watched more because movies are successful and not vice versa, this can be a problem.  This would mean feedback or leaking of the Y value into our predictors and reduced usefulness of the algorithm. 
+
+Unfortunately, YouTube does not allow access to historical data about videos (creators can only get access to their own channel history after 2015).  The only way to get this data would be to collect it on new movies before the release.  
+
+We do not think this problem is critical for two reasons.  First, we hypothesize most trailer watches happen before the movie is released since they are released with much fanfare months in advance.  Second, though some of the watch data undoubtedly comes after the release, it is not all caused by the popularity of the movie.  Trailer likes and dislikes will be especially robust to this problem - though popularity may inflate view count, likes and dislikes are based on the quality of the trailer, so it does not matter if they come before or after release date. 
+
+## More Data
+
+As previously mentioned we combined several large movie data sets and the limiting factor was either budget or revenue. We could manually add budget/revenue numbers for movies where our dataset is missing them or try to scrape wikipedia for missing data.  We hypothesize that most of the movies with public revenue or budget numbers have already been added into the datasets.  
+
+## New Features
+There are many new features that we hope to find or engineer in our next iteration: 
+- view to like ratio
+- advertising budget and other budget breakdowns
+- actor popularity score
+- script metadata
+- more movie metadata like location of filming
+
+## More Questions
+
+At some point we would like to return to the original question of movie revenue prediction.  One reason movie revenue was hard to predict is that it is logarithmic.  We could try to predict the log of revenue and see if that helps.
+
 # Credits
 - Oliver Upton: [@oupton](https://github.com/oupton)
 - Shahid Hussain: [@shahidhn](https://github.com/shahidhn)
