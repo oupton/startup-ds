@@ -80,6 +80,8 @@ We attempted XGBoost again. Our initial run saw some success, with an AUC score 
 
 ![XGB AUC](https://github.com/oupton/startup-ds/blob/master/images/auc_086.png?raw=true "XGB AUC") 
 
+# Understanding our model
+
 
 
 # Credits
