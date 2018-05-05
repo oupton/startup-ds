@@ -56,6 +56,7 @@ Also, here is a function for querying the YouTube Data API. Please note that You
 #!/usr/bin/env python
 import requests
 
+# Specify your YouTube Data API Key
 YOUTUBE_API_KEY = ''
 YOUTUBE_DATA_URL = 'https://www.googleapis.com/v3/videos?part=statistics&id={}&key={}'
 
@@ -161,6 +162,16 @@ The most important feature was how recently the movie was released, relative to 
 However, it was really interesting that the second-most important feature was which day in the year a movie was released - more so than other factors, including movie budget and genre!
 
 Also, the 3 features we extracted from YouTube data are among the top 7 most important features, which validates our hypothesis that trailer metadata could be predictive of movie profitability.
+
+We were very intrigued to see that dayInYear had such potency in determining the success of a movie. To investigate further, we analyzed the distribution of ```daysInYear``` for movies that were profitable and movies that were a loss.
+
+It seems that the most successful times to release a movie are the end of May through beginning of June, as well as the winter holiday season (December). Shown in graph below.
+
+![Movie Success](https://github.com/oupton/startup-ds/blob/master/images/movie_success.png?raw=true "Movie Success") 
+
+The least successful times to release a movie are August through September. Shown in graph below.
+
+![Movie Flops](https://github.com/oupton/startup-ds/blob/master/images/movie_flops.png?raw=true "Movie Flops") 
 
 # Next Steps
 ## Addressing Potential Problems
