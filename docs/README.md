@@ -68,13 +68,14 @@ def get_youtube_metadata(youtube_ids):
                     .format(youtube_id, resp.status_code))
             results[youtube_id] = {'views':0, 'likes':0, 'dislikes':0}
         else:
-            for video_item in youtube_resp.json()['items']:
+            for video_item in resp.json()['items']:
                 try:
-                    results[youtube_id] = {\
-                        'views': video_item['statistics']['viewCount'], 
-                        'likes': video_item['statistics']['likeCount'],
-                        'dislikes': video_item['statistics']['dislikeCount']
-                    }
+                    results[youtube_id] =   \
+                        {
+                            'views': video_item['statistics']['viewCount'], 
+                            'likes': video_item['statistics']['likeCount'],
+                            'dislikes': video_item['statistics']['dislikeCount']
+                        }
                 except:
                     print('Error: No statistics available for video {}'.format(youtube_id))  
     return results
