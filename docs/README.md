@@ -33,7 +33,7 @@ def get_youtube_ids(tmdb_ids):
             resp = requests.get(TMDB_VIDEO_URL.format(tmdb_ids[i], TMDB_API_KEY))
             if resp.status_code != 200:
                 print('Error: Failed to retrieve video for TMDb ID {} with status code: {}'\
-                .format(tmdb_ids[i], resp.status_code))
+                        .format(tmdb_ids[i], resp.status_code))
                 trailers.append([])
             else:
                 youtube_results = []
