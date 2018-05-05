@@ -9,10 +9,45 @@ Being able to accurately predict the profitability of a movie could have a massi
 ![Hollywood](https://images.pexels.com/photos/164183/pexels-photo-164183.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940 "Hollywood")
 
 # Data curation
-A huge amount of the efforts in our project went into curating and cleaning up the dataset. Initially, only 5381 movies out of the 45,000 had the financial data (budget and revenue) we thought would be important. We were also missing certain features we wanted to investigate, like movie trailer metadata from Youtube. We had to find ways to fill in the missing data.
+A huge amount of the efforts in our project went into curating and cleaning up the dataset. Initially, only 5381 movies out of the 45,000 had the financial data (budget and revenue) we thought would be important. We were also missing certain features we wanted to investigate, like movie trailer metadata from Youtube. We had to find ways to fill in the missing data. Acquiring good data and transforming it into a useful set of features is an extremely important part of Data Science. To help others gain an understanding of how to use public APIs to generate a dataset like we did, the following sections will provide some reference code alongside a description of our motives.
 
 ## Filling in movie trailer metadata
 Fortunately, the original dataset did provide the TMDb IDs of each of the movies. [The Movie Database](https://www.themoviedb.org/?language=en) (TMDb) is a community-built movie and TV database. Using the TMDb IDs, we could pull the YouTube trailer IDs of the movies using the [TMDb API](https://www.themoviedb.org/documentation/api?language=en). We then used the [YouTube Data API](https://developers.google.com/youtube/v3/getting-started) to pull the trailer views, likes and dislikes for these trailers. 
+
+Here is a helpful function for scraping trailers from TMDb for each ID in our dataset. Please note that TMDb has a 40 request per 10 second interval rate limiting, so be cautious not to upset this.
+
+```
+#!/usr/bin/env python
+import time
+import requests
+import pandas as pd
+
+# Specify your TMDb API key
+TMDB_API_KEY = ''
+TMDB_VIDEO_URL = 'https://api.themoviedb.org/3/movie/{}/videos?api_key={}'
+
+def get_youtube_ids(tmdb_ids):
+    trailers = []
+    for i in range(len(tmdb_ids)):
+        try:
+            resp = requests.get(TMDB_VIDEO_URL.format(tmdb_ids[i], TMDB_API_KEY))
+            if resp.status_code != 200:
+                print('Error: Failed to retrieve video data for TMDb ID {} with status code: {}'.format(tmdb_ids[i], resp.status_code))
+                trailers.append([])
+            else:
+                youtube_results = []
+                for video in resp.json()['results']:
+                    if video['site'] == 'YouTube' and video['type'] in { 'Teaser', 'Trailer' }:
+                        youtube_results.append(video['key'])
+                trailers.append(youtube_results)
+            # Rate limiting, stall 10 seconds
+            if i % 40 == 0:
+                time.sleep(10)
+        except:
+            trailers.append([])
+
+    return pd.Series(trailers, index=tmdb_ids)
+```
 
 ## Filling in missing financial data
 There were still plenty of movies with missing financial data. To try to solve this, we first turned to the [OMDb API](http://www.omdbapi.com/), which was able to give us the revenue values for some rows which had budget but no revenue values. We then turned to the budgets page of [The Numbers](https://www.the-numbers.com/movie/budgets/all/1). Their dataset was difficult to access, so we manually built a web scraper (using [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/), a Python library for parsing HTML and XML files) to and extract the budget and revenue data for 5520 movies (as of April 25, 2018). 
