@@ -32,7 +32,8 @@ def get_youtube_ids(tmdb_ids):
         try:
             resp = requests.get(TMDB_VIDEO_URL.format(tmdb_ids[i], TMDB_API_KEY))
             if resp.status_code != 200:
-                print('Error: Failed to retrieve video data for TMDb ID {} with status code: {}'.format(tmdb_ids[i], resp.status_code))
+                print('Error: Failed to retrieve video for TMDb ID {} with status code: {}'\
+                .format(tmdb_ids[i], resp.status_code))
                 trailers.append([])
             else:
                 youtube_results = []
@@ -47,6 +48,37 @@ def get_youtube_ids(tmdb_ids):
             trailers.append([])
 
     return pd.Series(trailers, index=tmdb_ids)
+```
+
+Also, here is a function for querying the YouTube Data API. Please note that YouTube enforces a 1 million request/day quota, so be mindful when scraping for data. There is a lot of data returned by YouTube we are discarding a lot of data besides likes, dislikes, and views. 
+
+```
+#!/usr/bin/env python
+import requests
+import pandas as pd
+
+YOUTUBE_API_KEY = ''
+YOUTUBE_DATA_URL = 'https://www.googleapis.com/v3/videos?part=statistics&id={}&key={}'
+
+def get_youtube_metadata(youtube_ids):
+    results = {}
+    for youtube_id in youtube_ids:
+        resp = requests.get(YOUTUBE_DATA_URL.format(youtube_id, YOUTUBE_API_KEY))
+        if resp.status_code != 200:
+            print('Error: Data retrieval failed for video {} with status code: {}'\
+                    .format(youtube_id, resp.status_code))
+            results[youtube_id] = {'views':0, 'likes':0, 'dislikes':0}
+        else:
+            for video_item in youtube_resp.json()['items']:
+                try:
+                    results[youtube_id] = {\
+                        'views': video_item['statistics']['viewCount'], 
+                        'likes': video_item['statistics']['likeCount'],
+                        'dislikes': video_item['statistics']['dislikeCount']
+                    }
+                except:
+                    print('Error: No statistics available for video {}'.format(youtube_id))  
+    return results
 ```
 
 ## Filling in missing financial data
