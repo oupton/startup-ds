@@ -55,7 +55,6 @@ Also, here is a function for querying the YouTube Data API. Please note that You
 ```
 #!/usr/bin/env python
 import requests
-import pandas as pd
 
 YOUTUBE_API_KEY = ''
 YOUTUBE_DATA_URL = 'https://www.googleapis.com/v3/videos?part=statistics&id={}&key={}'
